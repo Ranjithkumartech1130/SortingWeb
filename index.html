@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranjith's Crystal Clear Sorting Web</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .algorithm-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .algorithm-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .algorithm-section {
+            display: none;
+        }
+
+        .algorithm-section.active {
+            display: block;
+        }
+
+        .algorithm-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .bubble-sort .algorithm-title {
+            color: #ff6b6b;
+        }
+
+        .insertion-sort .algorithm-title {
+            color: #4ecdc4;
+        }
+
+        .quick-sort .algorithm-title {
+            color: #45b7d1;
+        }
+
+        .merge-sort .algorithm-title {
+            color: #9c27b0;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #555;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #4ecdc4;
+        }
+
+        .visualization-container {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 3px solid #e9ecef;
+        }
+
+        .status-display {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .array-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 8px;
+            margin: 40px 0;
+            height: 280px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .array-bar {
+            width: 55px;
+            background: linear-gradient(to top, #6c757d, #adb5bd);
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.6s ease;
+            position: relative;
+            border: 3px solid transparent;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .array-bar::before {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .array-bar.comparing {
+            background: linear-gradient(to top, #dc3545, #ff6b6b);
+            transform: scale(1.15);
+            border-color: #dc3545;
+            box-shadow: 0 0 25px rgba(220, 53, 69, 0.6);
+            animation: compareGlow 1s ease-in-out infinite alternate;
+        }
+
+        .array-bar.comparing::before {
+            border-bottom: 12px solid #dc3545;
+            opacity: 1;
+        }
+
+        .array-bar.swapping {
+            background: linear-gradient(to top, #fd7e14, #ffb347);
+            transform: scale(1.25) rotate(5deg);
+            border-color: #fd7e14;
+            box-shadow: 0 0 30px rgba(253, 126, 20, 0.8);
+            animation: swapBounce 0.8s ease-in-out infinite alternate;
+        }
+
+        .array-bar.swapping::before {
+            border-bottom: 12px solid #fd7e14;
+            opacity: 1;
+        }
+
+        .array-bar.sorted {
+            background: linear-gradient(to top, #28a745, #51cf66);
+            border-color: #28a745;
+            box-shadow: 0 0 20px rgba(40, 167, 69, 0.5);
+            animation: sortedCelebration 1.5s ease-in-out;
+        }
+
+        .array-bar.sorted::before {
+            border-bottom: 12px solid #28a745;
+            opacity: 1;
+        }
+
+        .array-bar.pivot {
+            background: linear-gradient(to top, #ffc107, #ffeb3b);
+            transform: scale(1.4);
+            border-color: #ffc107;
+            box-shadow: 0 0 35px rgba(255, 193, 7, 0.9);
+            animation: pivotPulse 1.2s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        .array-bar.pivot::before {
+            border-bottom: 15px solid #ffc107;
+            opacity: 1;
+        }
+
+        .array-bar.pivot::after {
+            content: 'PIVOT';
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffc107;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .array-bar.current {
+            background: linear-gradient(to top, #6f42c1, #9c27b0);
+            transform: scale(1.3);
+            border-color: #6f42c1;
+            box-shadow: 0 0 30px rgba(111, 66, 193, 0.7);
+            animation: currentHighlight 1s ease-in-out infinite alternate;
+        }
+
+        .array-bar.current::before {
+            border-bottom: 12px solid #6f42c1;
+            opacity: 1;
+        }
+
+        .array-bar.current::after {
+            content: 'CURRENT';
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #6f42c1;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .array-bar.splitting {
+            background: linear-gradient(to top, #e83e8c, #ff6b9d);
+            transform: scale(1.2);
+            border-color: #e83e8c;
+            animation: splitPulse 1s ease-in-out infinite alternate;
+            box-shadow: 0 0 25px rgba(232, 62, 140, 0.6);
+        }
+
+        .array-bar.splitting::before {
+            border-bottom: 12px solid #e83e8c;
+            opacity: 1;
+        }
+
+        .array-bar.merging {
+            background: linear-gradient(to top, #20c997, #51cf66);
+            transform: scale(1.2);
+            border-color: #20c997;
+            animation: mergeGlow 1.2s ease-in-out infinite alternate;
+            box-shadow: 0 0 30px rgba(32, 201, 151, 0.8);
+        }
+
+        .array-bar.merging::before {
+            border-bottom: 12px solid #20c997;
+            opacity: 1;
+        }
+
+        .array-bar.merging::after {
+            content: 'MERGING';
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #20c997;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes compareGlow {
+            0% { box-shadow: 0 0 25px rgba(220, 53, 69, 0.6); }
+            100% { box-shadow: 0 0 35px rgba(220, 53, 69, 0.9); }
+        }
+
+        @keyframes swapBounce {
+            0% { transform: scale(1.25) rotate(5deg) translateY(0); }
+            100% { transform: scale(1.25) rotate(-5deg) translateY(-10px); }
+        }
+
+        @keyframes sortedCelebration {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            50% { transform: scale(1.2) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(3deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        @keyframes pivotPulse {
+            0% { transform: scale(1.4); box-shadow: 0 0 35px rgba(255, 193, 7, 0.9); }
+            50% { transform: scale(1.5); box-shadow: 0 0 45px rgba(255, 193, 7, 1); }
+            100% { transform: scale(1.4); box-shadow: 0 0 35px rgba(255, 193, 7, 0.9); }
+        }
+
+        @keyframes currentHighlight {
+            0% { box-shadow: 0 0 30px rgba(111, 66, 193, 0.7); }
+            100% { box-shadow: 0 0 40px rgba(111, 66, 193, 1); }
+        }
+
+        @keyframes splitPulse {
+            0% { transform: scale(1.2); }
+            100% { transform: scale(1.3); }
+        }
+
+        @keyframes mergeGlow {
+            0% { box-shadow: 0 0 30px rgba(32, 201, 151, 0.8); }
+            100% { box-shadow: 0 0 40px rgba(32, 201, 151, 1); }
+        }
+
+        .split-indicator {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #e83e8c, #ff6b9d);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 15;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: indicatorBounce 0.8s ease-in-out;
+        }
+
+        .merge-indicator {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #20c997, #51cf66);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 15;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: indicatorBounce 0.8s ease-in-out;
+        }
+
+        @keyframes indicatorBounce {
+            0% { transform: translateX(-50%) translateY(-10px) scale(0.8); opacity: 0; }
+            50% { transform: translateX(-50%) translateY(-5px) scale(1.1); opacity: 1; }
+            100% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .interactive-controls {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+            border: 2px solid #dee2e6;
+        }
+
+        .interactive-controls h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .control-group label {
+            font-weight: bold;
+            color: #495057;
+            min-width: 120px;
+            font-size: 1.1rem;
+        }
+
+        .slider {
+            width: 220px;
+            height: 10px;
+            border-radius: 5px;
+            background: #dee2e6;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-field {
+            padding: 12px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            font-size: 1rem;
+            width: 320px;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .control-button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .complexity-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 35px 0;
+        }
+
+        .complexity-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .complexity-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .complexity-card p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .steps-container {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 25px 0;
+            border: 2px solid #2196f3;
+        }
+
+        .steps-container h3 {
+            color: #1976d2;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+        }
+
+        .step {
+            background: white;
+            padding: 18px;
+            margin: 12px 0;
+            border-radius: 15px;
+            border-left: 6px solid #4ecdc4;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateX(10px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .example-container {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 25px 0;
+            border: 2px solid #ff9800;
+        }
+
+        .example-container h3 {
+            color: #f57c00;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+        }
+
+        .example-step {
+            background: white;
+            padding: 18px;
+            margin: 12px 0;
+            border-radius: 15px;
+            border-left: 6px solid #ff6b6b;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .algorithm-title {
+                font-size: 2rem;
+            }
+            
+            .array-bar {
+                width: 45px;
+                font-size: 1rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .array-container {
+                height: 240px;
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Ranjith's Crystal Clear Sorting Web</h1>
+            <p>Super clear sorting animations with bigger elements, brighter colors, and step-by-step indicators!</p>
+        </div>
+
+        <div class="algorithm-tabs">
+            <button class="tab-button active" onclick="showAlgorithm('bubble')">🫧 Bubble Sort</button>
+            <button class="tab-button" onclick="showAlgorithm('insertion')">📝 Insertion Sort</button>
+            <button class="tab-button" onclick="showAlgorithm('quick')">⚡ Quick Sort</button>
+            <button class="tab-button" onclick="showAlgorithm('merge')">🔀 Merge Sort</button>
+        </div>
+
+        <div class="algorithm-content">
+            <!-- Bubble Sort Section -->
+            <div id="bubble" class="algorithm-section bubble-sort active">
+                <h2 class="algorithm-title">🫧 Bubble Sort</h2>
+                <p class="description">
+                    🫧 Imagine you have toys in a line, and you want the biggest toy at the end! Bubble Sort looks at two toys next to each other. If the left toy is bigger, they switch places! It keeps doing this until all the big toys "bubble up" to the right side, just like bubbles floating up in water! 🛁
+                </p>
+
+                <div class="interactive-controls">
+                    <h3>🎮 Interactive Controls</h3>
+                    <div class="control-group">
+                        <label>Speed:</label>
+                        <input type="range" class="slider" id="bubble-speed" min="1" max="10" value="5" onchange="updateSpeed('bubble', this.value)">
+                        <span id="bubble-speed-value">5</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Array Size:</label>
+                        <input type="range" class="slider" id="bubble-size" min="5" max="12" value="8" onchange="updateArraySize('bubble', this.value)">
+                        <span id="bubble-size-value">8</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Custom Array:</label>
+                        <input type="text" class="input-field" id="bubble-custom" placeholder="Enter numbers separated by commas (e.g., 64,34,25,12)">
+                        <button class="control-button" onclick="setCustomArray('bubble')">Set Array</button>
+                    </div>
+                </div>
+
+                <div class="visualization-container">
+                    <h3>🎬 Watch Bubble Sort in Action</h3>
+                    <div class="status-display" id="bubble-status">Ready to start! Click the play button below 🎯</div>
+                    <div class="array-container" id="bubble-array"></div>
+                    <div class="controls">
+                        <button class="control-button" onclick="generateArray('bubble')">🎲 New Array</button>
+                        <button class="control-button" onclick="startBubbleSort()">▶️ Start Sort</button>
+                        <button class="control-button" onclick="resetArray('bubble')">🔄 Reset</button>
+                    </div>
+                </div>
+
+                <div class="complexity-info">
+                    <div class="complexity-card">
+                        <h3>⏱️ Time Complexity</h3>
+                        <p>O(n²) - Worst & Average</p>
+                        <p>O(n) - Best Case</p>
+                    </div>
+                    <div class="complexity-card">
+                        <h3>💾 Space Complexity</h3>
+                        <p>O(1) - Constant</p>
+                    </div>
+                </div>
+
+                <div class="steps-container">
+                    <h3>🎯 How to Play the Bubble Game</h3>
+                    <div class="step">1. 👀 Look at the first two toys side by side</div>
+                    <div class="step">2. 🔄 If the left toy is bigger, make them switch places!</div>
+                    <div class="step">3. 👉 Move to the next pair of toys and do the same thing</div>
+                    <div class="step">4. 🎉 After one round, the biggest toy is now at the end!</div>
+                    <div class="step">5. 🔁 Keep playing until all toys are in the right order!</div>
+                </div>
+
+                <div class="example-container">
+                    <h3>🎈 Watch the Bubbles Rise!</h3>
+                    <div class="example-step">🧸 Start: [64, 34, 25, 12, 22, 11, 90] - All toys mixed up!</div>
+                    <div class="example-step">🎈 Round 1: [34, 25, 12, 22, 11, 64, 90] ← The biggest toy (90) bubbled to the end!</div>
+                    <div class="example-step">🎈 Round 2: [25, 12, 22, 11, 34, 64, 90] ← Now 64 found its spot!</div>
+                    <div class="example-step">🎈 Round 3: [12, 22, 11, 25, 34, 64, 90] ← 34 bubbled up too!</div>
+                    <div class="example-step">🎉 All Done: [11, 12, 22, 25, 34, 64, 90] ← Perfect order from small to big!</div>
+                </div>
+            </div>
+
+            <!-- Insertion Sort Section -->
+            <div id="insertion" class="algorithm-section insertion-sort">
+                <h2 class="algorithm-title">📝 Insertion Sort</h2>
+                <p class="description">
+                    📝 Think about organizing your crayons from smallest to biggest! You pick up one crayon at a time and put it in the right spot among the crayons you've already organized. It's like when you get a new card in a card game - you slide it into the perfect spot in your hand! 🎴✨
+                </p>
+
+                <div class="interactive-controls">
+                    <h3>🎮 Interactive Controls</h3>
+                    <div class="control-group">
+                        <label>Speed:</label>
+                        <input type="range" class="slider" id="insertion-speed" min="1" max="10" value="5" onchange="updateSpeed('insertion', this.value)">
+                        <span id="insertion-speed-value">5</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Array Size:</label>
+                        <input type="range" class="slider" id="insertion-size" min="5" max="12" value="8" onchange="updateArraySize('insertion', this.value)">
+                        <span id="insertion-size-value">8</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Custom Array:</label>
+                        <input type="text" class="input-field" id="insertion-custom" placeholder="Enter numbers separated by commas (e.g., 64,34,25,12)">
+                        <button class="control-button" onclick="setCustomArray('insertion')">Set Array</button>
+                    </div>
+                </div>
+
+                <div class="visualization-container">
+                    <h3>🎬 Watch Insertion Sort in Action</h3>
+                    <div class="status-display" id="insertion-status">Ready to organize crayons! Click play to start 🖍️</div>
+                    <div class="array-container" id="insertion-array"></div>
+                    <div class="controls">
+                        <button class="control-button" onclick="generateArray('insertion')">🎲 New Array</button>
+                        <button class="control-button" onclick="startInsertionSort()">▶️ Start Sort</button>
+                        <button class="control-button" onclick="resetArray('insertion')">🔄 Reset</button>
+                    </div>
+                </div>
+
+                <div class="complexity-info">
+                    <div class="complexity-card">
+                        <h3>⏱️ Time Complexity</h3>
+                        <p>O(n²) - Worst & Average</p>
+                        <p>O(n) - Best Case</p>
+                    </div>
+                    <div class="complexity-card">
+                        <h3>💾 Space Complexity</h3>
+                        <p>O(1) - Constant</p>
+                    </div>
+                </div>
+
+                <div class="steps-container">
+                    <h3>🖍️ How to Organize Your Crayons</h3>
+                    <div class="step">1. 🎯 Start with the second crayon (the first one is already "organized")</div>
+                    <div class="step">2. 👀 Look at where this crayon should go in your organized pile</div>
+                    <div class="step">3. 📦 Move the bigger crayons to make space</div>
+                    <div class="step">4. 🎪 Put your crayon in its perfect spot!</div>
+                    <div class="step">5. 🔄 Pick up the next crayon and do it again!</div>
+                </div>
+
+                <div class="example-container">
+                    <h3>🖍️ Organizing Crayons Step by Step!</h3>
+                    <div class="example-step">🎨 Start: [64, 34, 25, 12, 22, 11, 90] - Crayons all mixed up!</div>
+                    <div class="example-step">✨ Step 1: [34, 64, 25, 12, 22, 11, 90] ← Put crayon 34 in the right spot!</div>
+                    <div class="example-step">✨ Step 2: [25, 34, 64, 12, 22, 11, 90] ← Now crayon 25 finds its home!</div>
+                    <div class="example-step">✨ Step 3: [12, 25, 34, 64, 22, 11, 90] ← Crayon 12 slides into place!</div>
+                    <div class="example-step">🌈 Perfect: [11, 12, 22, 25, 34, 64, 90] ← All crayons organized beautifully!</div>
+                </div>
+            </div>
+
+            <!-- Quick Sort Section -->
+            <div id="quick" class="algorithm-section quick-sort">
+                <h2 class="algorithm-title">⚡ Quick Sort</h2>
+                <p class="description">
+                    ⚡ Imagine you're the teacher organizing kids by height for a photo! You pick one kid as the "helper" and ask everyone shorter to go to the left, and everyone taller to go to the right. Then you do the same thing with each group until everyone is perfectly organized! It's super fast! 📸👫
+                </p>
+
+                <div class="interactive-controls">
+                    <h3>🎮 Interactive Controls</h3>
+                    <div class="control-group">
+                        <label>Speed:</label>
+                        <input type="range" class="slider" id="quick-speed" min="1" max="10" value="5" onchange="updateSpeed('quick', this.value)">
+                        <span id="quick-speed-value">5</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Array Size:</label>
+                        <input type="range" class="slider" id="quick-size" min="5" max="12" value="8" onchange="updateArraySize('quick', this.value)">
+                        <span id="quick-size-value">8</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Custom Array:</label>
+                        <input type="text" class="input-field" id="quick-custom" placeholder="Enter numbers separated by commas (e.g., 64,34,25,12)">
+                        <button class="control-button" onclick="setCustomArray('quick')">Set Array</button>
+                    </div>
+                </div>
+
+                <div class="visualization-container">
+                    <h3>🎬 Watch Quick Sort in Action</h3>
+                    <div class="status-display" id="quick-status">Ready to organize kids for the photo! Click play 📸</div>
+                    <div class="array-container" id="quick-array"></div>
+                    <div class="controls">
+                        <button class="control-button" onclick="generateArray('quick')">🎲 New Array</button>
+                        <button class="control-button" onclick="startQuickSort()">▶️ Start Sort</button>
+                        <button class="control-button" onclick="resetArray('quick')">🔄 Reset</button>
+                    </div>
+                </div>
+
+                <div class="complexity-info">
+                    <div class="complexity-card">
+                        <h3>⏱️ Time Complexity</h3>
+                        <p>O(n log n) - Average</p>
+                        <p>O(n²) - Worst Case</p>
+                    </div>
+                    <div class="complexity-card">
+                        <h3>💾 Space Complexity</h3>
+                        <p>O(log n) - Average</p>
+                    </div>
+                </div>
+
+                <div class="steps-container">
+                    <h3>👨‍🏫 How to Organize Kids for a Photo</h3>
+                    <div class="step">1. 🎯 Pick one kid to be your "helper" (usually the one at the end)</div>
+                    <div class="step">2. 👈👉 Ask shorter kids to go left, taller kids to go right</div>
+                    <div class="step">3. 🎪 Put your helper in the middle where they belong</div>
+                    <div class="step">4. 🔄 Do the same thing with the left group and right group</div>
+                    <div class="step">5. 🎉 Ta-da! Everyone is organized perfectly for the photo!</div>
+                </div>
+
+                <div class="example-container">
+                    <h3>📸 Organizing Kids for the Class Photo!</h3>
+                    <div class="example-step">👫 Start: [64, 34, 25, 12, 22, 11, 90] - Kids all mixed up! (Helper: 90)</div>
+                    <div class="example-step">📏 Split: [64, 34, 25, 12, 22, 11] | [90] - Shorter kids left, helper in middle!</div>
+                    <div class="example-step">👫 Left group: [11, 34, 25, 12, 22, 64] - Now 64 is the helper!</div>
+                    <div class="example-step">📏 Split again: [11, 34, 25, 12, 22] | [64] - Getting organized!</div>
+                    <div class="example-step">📸 Perfect photo: [11, 12, 22, 25, 34, 64, 90] - Everyone in perfect height order!</div>
+                </div>
+            </div>
+
+            <!-- Merge Sort Section -->
+            <div id="merge" class="algorithm-section merge-sort">
+                <h2 class="algorithm-title">🔀 Merge Sort</h2>
+                <p class="description">
+                    🔀 Think about cleaning up two messy toy boxes! First, you split all the toys into smaller piles. Then you organize each small pile. Finally, you carefully put all the organized piles back together into one big, perfectly organized toy box! It's like magic! ✨🧸
+                </p>
+
+                <div class="interactive-controls">
+                    <h3>🎮 Interactive Controls</h3>
+                    <div class="control-group">
+                        <label>Speed:</label>
+                        <input type="range" class="slider" id="merge-speed" min="1" max="10" value="5" onchange="updateSpeed('merge', this.value)">
+                        <span id="merge-speed-value">5</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Array Size:</label>
+                        <input type="range" class="slider" id="merge-size" min="5" max="12" value="8" onchange="updateArraySize('merge', this.value)">
+                        <span id="merge-size-value">8</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Custom Array:</label>
+                        <input type="text" class="input-field" id="merge-custom" placeholder="Enter numbers separated by commas (e.g., 64,34,25,12)">
+                        <button class="control-button" onclick="setCustomArray('merge')">Set Array</button>
+                    </div>
+                </div>
+
+                <div class="visualization-container">
+                    <h3>🎬 Watch Merge Sort in Action</h3>
+                    <div class="status-display" id="merge-status">Ready to organize the toy box! Click play for magic ✨</div>
+                    <div class="array-container" id="merge-array"></div>
+                    <div class="controls">
+                        <button class="control-button" onclick="generateArray('merge')">🎲 New Array</button>
+                        <button class="control-button" onclick="startMergeSort()">▶️ Start Sort</button>
+                        <button class="control-button" onclick="resetArray('merge')">🔄 Reset</button>
+                    </div>
+                </div>
+
+                <div class="complexity-info">
+                    <div class="complexity-card">
+                        <h3>⏱️ Time Complexity</h3>
+                        <p>O(n log n) - All Cases</p>
+                        <p>Consistent Performance</p>
+                    </div>
+                    <div class="complexity-card">
+                        <h3>💾 Space Complexity</h3>
+                        <p>O(n) - Linear</p>
+                    </div>
+                </div>
+
+                <div class="steps-container">
+                    <h3>🧸 How to Organize Your Toy Box</h3>
+                    <div class="step">1. 📦 Split your big pile of toys into two smaller piles</div>
+                    <div class="step">2. ✂️ Keep splitting until each pile has just one toy</div>
+                    <div class="step">3. 🔄 Now start putting the piles back together</div>
+                    <div class="step">4. 👀 Look at two piles and pick the smaller toy first</div>
+                    <div class="step">5. 🎉 Keep doing this until all toys are back in one organized box!</div>
+                </div>
+
+                <div class="example-container">
+                    <h3>🧸 The Magic Toy Box Organization!</h3>
+                    <div class="example-step">🎪 Start: [64, 34, 25, 12, 22, 11, 90, 88] - Big messy toy pile!</div>
+                    <div class="example-step">📦 Split: [64, 34, 25, 12] | [22, 11, 90, 88] - Two smaller piles!</div>
+                    <div class="example-step">✂️ Split more: [64, 34] [25, 12] | [22, 11] [90, 88] - Even smaller piles!</div>
+                    <div class="example-step">🔄 Put back: [34, 64] [12, 25] | [11, 22] [88, 90] - Small piles organized!</div>
+                    <div class="example-step">🎯 Combine: [12, 25, 34, 64] | [11, 22, 88, 90] - Bigger organized piles!</div>
+                    <div class="example-step">✨ Magic: [11, 12, 22, 25, 34, 64, 88, 90] - One perfect toy box!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let arrays = {
+            bubble: [],
+            insertion: [],
+            quick: [],
+            merge: []
+        };
+        let originalArrays = {
+            bubble: [],
+            insertion: [],
+            quick: [],
+            merge: []
+        };
+        let isAnimating = false;
+        let animationSpeed = {
+            bubble: 5,
+            insertion: 5,
+            quick: 5,
+            merge: 5
+        };
+        let arraySize = {
+            bubble: 8,
+            insertion: 8,
+            quick: 8,
+            merge: 8
+        };
+
+        // Initialize arrays
+        function initializeArrays() {
+            generateArray('bubble');
+            generateArray('insertion');
+            generateArray('quick');
+            generateArray('merge');
+        }
+
+        // Generate random array
+        function generateArray(type) {
+            const array = [];
+            const size = arraySize[type];
+            for (let i = 0; i < size; i++) {
+                array.push(Math.floor(Math.random() * 180) + 20);
+            }
+            arrays[type] = [...array];
+            originalArrays[type] = [...array];
+            renderArray(type);
+            updateStatus(type, `Ready to start! Array has ${size} elements 🎯`);
+        }
+
+        // Update status display
+        function updateStatus(type, message) {
+            const statusElement = document.getElementById(`${type}-status`);
+            if (statusElement) {
+                statusElement.textContent = message;
+            }
+        }
+
+        // Update animation speed
+        function updateSpeed(type, value) {
+            animationSpeed[type] = parseInt(value);
+            document.getElementById(`${type}-speed-value`).textContent = value;
+        }
+
+        // Update array size
+        function updateArraySize(type, value) {
+            arraySize[type] = parseInt(value);
+            document.getElementById(`${type}-size-value`).textContent = value;
+            generateArray(type);
+        }
+
+        // Set custom array
+        function setCustomArray(type) {
+            const input = document.getElementById(`${type}-custom`);
+            const values = input.value.split(',').map(v => parseInt(v.trim())).filter(v => !isNaN(v));
+            
+            if (values.length > 0) {
+                arrays[type] = values.slice(0, 12); // Limit to 12 elements
+                originalArrays[type] = [...arrays[type]];
+                arraySize[type] = arrays[type].length;
+                document.getElementById(`${type}-size`).value = arraySize[type];
+                document.getElementById(`${type}-size-value`).textContent = arraySize[type];
+                renderArray(type);
+                input.value = '';
+                updateStatus(type, `Custom array loaded with ${arraySize[type]} elements! 🎨`);
+            }
+        }
+
+        // Get animation delay based on speed
+        function getAnimationDelay(type) {
+            return 1200 - (animationSpeed[type] * 100); // Speed 1 = 1100ms, Speed 10 = 200ms
+        }
+
+        // Reset array to original
+        function resetArray(type) {
+            if (isAnimating) return;
+            arrays[type] = [...originalArrays[type]];
+            renderArray(type);
+            updateStatus(type, `Array reset! Ready to sort again 🔄`);
+        }
+
+        // Render array visualization
+        function renderArray(type) {
+            const container = document.getElementById(`${type}-array`);
+            container.innerHTML = '';
+            
+            arrays[type].forEach((value, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'array-bar';
+                bar.style.height = `${value}px`;
+                bar.textContent = value;
+                bar.id = `${type}-bar-${index}`;
+                container.appendChild(bar);
+            });
+        }
+
+        // Show algorithm tab
+        function showAlgorithm(algorithm) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update content sections
+            document.querySelectorAll('.algorithm-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(algorithm).classList.add('active');
+        }
+
+        // Bubble Sort Animation
+        async function startBubbleSort() {
+            if (isAnimating) return;
+            isAnimating = true;
+            updateStatus('bubble', '🫧 Starting Bubble Sort! Watch the bubbles rise...');
+            
+            const arr = [...arrays.bubble];
+            const n = arr.length;
+            const delay = getAnimationDelay('bubble');
+            
+            for (let i = 0; i < n - 1; i++) {
+                updateStatus('bubble', `🔄 Round ${i + 1}: Looking for the ${i === 0 ? 'biggest' : 'next biggest'} bubble!`);
+                
+                for (let j = 0; j < n - i - 1; j++) {
+                    // Highlight comparing elements
+                    updateStatus('bubble', `👀 Comparing ${arr[j]} and ${arr[j + 1]}...`);
+                    highlightBars('bubble', [j, j + 1], 'comparing');
+                    await sleep(delay);
+                    
+                    if (arr[j] > arr[j + 1]) {
+                        // Highlight swapping elements
+                        updateStatus('bubble', `🔄 Swapping! ${arr[j]} > ${arr[j + 1]}, so they switch places!`);
+                        highlightBars('bubble', [j, j + 1], 'swapping');
+                        await sleep(delay * 0.8);
+                        
+                        // Swap elements
+                        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+                        arrays.bubble = [...arr];
+                        renderArray('bubble');
+                        await sleep(delay * 0.6);
+                    } else {
+                        updateStatus('bubble', `✅ No swap needed! ${arr[j]} ≤ ${arr[j + 1]}`);
+                        await sleep(delay * 0.4);
+                    }
+                    
+                    // Remove highlighting
+                    clearHighlights('bubble');
+                }
+                // Mark as sorted
+                const sortedBar = document.getElementById(`bubble-bar-${n - 1 - i}`);
+                if (sortedBar) sortedBar.classList.add('sorted');
+                updateStatus('bubble', `🎉 Found the spot for ${arr[n - 1 - i]}! It's in the right place now!`);
+                await sleep(delay * 0.5);
+            }
+            
+            // Mark first element as sorted
+            const firstBar = document.getElementById('bubble-bar-0');
+            if (firstBar) firstBar.classList.add('sorted');
+            updateStatus('bubble', '🎊 All done! Every bubble found its perfect spot! 🫧✨');
+            isAnimating = false;
+        }
+
+        // Insertion Sort Animation
+        async function startInsertionSort() {
+            if (isAnimating) return;
+            isAnimating = true;
+            updateStatus('insertion', '📝 Starting Insertion Sort! Time to organize those crayons...');
+            
+            const arr = [...arrays.insertion];
+            const n = arr.length;
+            const delay = getAnimationDelay('insertion');
+            
+            // Mark first element as sorted
+            const firstBar = document.getElementById('insertion-bar-0');
+            if (firstBar) firstBar.classList.add('sorted');
+            updateStatus('insertion', `✅ First crayon (${arr[0]}) is already organized!`);
+            await sleep(delay);
+            
+            for (let i = 1; i < n; i++) {
+                const key = arr[i];
+                let j = i - 1;
+                
+                // Highlight current element being inserted
+                updateStatus('insertion', `🖍️ Picking up crayon ${key}... Where should it go?`);
+                highlightBars('insertion', [i], 'current');
+                await sleep(delay);
+                
+                // Show the sorted portion
+                for (let k = 0; k < i; k++) {
+                    const sortedBar = document.getElementById(`insertion-bar-${k}`);
+                    if (sortedBar && !sortedBar.classList.contains('sorted')) {
+                        sortedBar.classList.add('sorted');
+                    }
+                }
+                
+                let moveCount = 0;
+                while (j >= 0 && arr[j] > key) {
+                    moveCount++;
+                    // Highlight comparison
+                    clearHighlights('insertion');
+                    updateStatus('insertion', `🔍 ${arr[j]} > ${key}, so ${arr[j]} needs to move right!`);
+                    highlightBars('insertion', [j], 'comparing');
+                    highlightBars('insertion', [j + 1], 'current');
+                    await sleep(delay * 0.8);
+                    
+                    // Show the shift happening
+                    highlightBars('insertion', [j, j + 1], 'swapping');
+                    await sleep(delay * 0.6);
+                    
+                    arr[j + 1] = arr[j];
+                    j--;
+                    
+                    arrays.insertion = [...arr];
+                    renderArray('insertion');
+                    
+                    // Restore sorted highlighting
+                    for (let k = 0; k <= Math.max(0, j); k++) {
+                        const sortedBar = document.getElementById(`insertion-bar-${k}`);
+                        if (sortedBar) sortedBar.classList.add('sorted');
+                    }
+                    
+                    await sleep(delay * 0.4);
+                }
+                
+                // Insert the key in its correct position
+                arr[j + 1] = key;
+                arrays.insertion = [...arr];
+                renderArray('insertion');
+                
+                // Highlight the final insertion
+                clearHighlights('insertion');
+                updateStatus('insertion', `🎯 Perfect! Crayon ${key} found its home at position ${j + 1}!`);
+                highlightBars('insertion', [j + 1], 'merging');
+                await sleep(delay * 0.8);
+                
+                // Mark the newly inserted element as sorted
+                const insertedBar = document.getElementById(`insertion-bar-${j + 1}`);
+                if (insertedBar) insertedBar.classList.add('sorted');
+                
+                clearHighlights('insertion');
+                await sleep(delay * 0.4);
+            }
+            
+            // Final celebration
+            updateStatus('insertion', '🌈 Amazing! All crayons are perfectly organized! 🖍️✨');
+            for (let i = 0; i < n; i++) {
+                const bar = document.getElementById(`insertion-bar-${i}`);
+                if (bar) {
+                    bar.classList.add('sorted');
+                    bar.classList.add('merging');
+                }
+                await sleep(80);
+            }
+            
+            // Remove final highlighting
+            setTimeout(() => {
+                clearHighlights('insertion');
+            }, 1500);
+            
+            isAnimating = false;
+        }
+
+        // Quick Sort Animation
+        async function startQuickSort() {
+            if (isAnimating) return;
+            isAnimating = true;
+            updateStatus('quick', '⚡ Starting Quick Sort! Time to organize kids for the photo...');
+            
+            const arr = [...arrays.quick];
+            await quickSortHelper(arr, 0, arr.length - 1);
+            
+            // Mark all as sorted
+            updateStatus('quick', '📸 Perfect! Everyone is ready for the class photo! ⚡✨');
+            for (let i = 0; i < arr.length; i++) {
+                const bar = document.getElementById(`quick-bar-${i}`);
+                if (bar) bar.classList.add('sorted');
+                await sleep(100);
+            }
+            
+            isAnimating = false;
+        }
+
+        async function quickSortHelper(arr, low, high) {
+            if (low < high) {
+                const pi = await partition(arr, low, high);
+                await quickSortHelper(arr, low, pi - 1);
+                await quickSortHelper(arr, pi + 1, high);
+            }
+        }
+
+        async function partition(arr, low, high) {
+            const pivot = arr[high];
+            let i = low - 1;
+            const delay = getAnimationDelay('quick');
+            
+            // Highlight pivot with special styling
+            clearHighlights('quick');
+            updateStatus('quick', `🎯 Choosing ${pivot} as our helper! Everyone shorter goes left, taller goes right!`);
+            highlightBars('quick', [high], 'pivot');
+            await sleep(delay);
+            
+            for (let j = low; j < high; j++) {
+                // Show current element being compared
+                clearHighlights('quick');
+                highlightBars('quick', [high], 'pivot');
+                highlightBars('quick', [j], 'current');
+                updateStatus('quick', `🤔 Is ${arr[j]} shorter than helper ${pivot}?`);
+                await sleep(delay * 0.8);
+                
+                if (arr[j] < pivot) {
+                    i++;
+                    updateStatus('quick', `✅ Yes! ${arr[j]} < ${pivot}, so it goes to the left side!`);
+                    
+                    // Highlight elements that will be swapped
+                    if (i !== j) {
+                        clearHighlights('quick');
+                        highlightBars('quick', [high], 'pivot');
+                        highlightBars('quick', [i, j], 'swapping');
+                        await sleep(delay * 0.7);
+                    }
+                    
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                    arrays.quick = [...arr];
+                    renderArray('quick');
+                    
+                    // Show the result of swap
+                    clearHighlights('quick');
+                    highlightBars('quick', [high], 'pivot');
+                    highlightBars('quick', [i], 'merging');
+                    await sleep(delay * 0.5);
+                } else {
+                    updateStatus('quick', `❌ No, ${arr[j]} ≥ ${pivot}, so it stays on the right side!`);
+                    highlightBars('quick', [j], 'comparing');
+                    await sleep(delay * 0.4);
+                }
+            }
+            
+            // Final pivot placement
+            clearHighlights('quick');
+            updateStatus('quick', `🎪 Now putting helper ${pivot} in the perfect middle spot!`);
+            highlightBars('quick', [i + 1, high], 'swapping');
+            await sleep(delay * 0.8);
+            
+            [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+            arrays.quick = [...arr];
+            renderArray('quick');
+            
+            // Highlight the pivot in its final position
+            clearHighlights('quick');
+            updateStatus('quick', `🎉 Perfect! ${pivot} found its exact spot in the photo line!`);
+            highlightBars('quick', [i + 1], 'sorted');
+            await sleep(delay * 0.8);
+            
+            return i + 1;
+        }
+
+        // Merge Sort Animation
+        async function startMergeSort() {
+            if (isAnimating) return;
+            isAnimating = true;
+            updateStatus('merge', '🔀 Starting Merge Sort! First we split, then we organize...');
+            
+            const arr = [...arrays.merge];
+            await showSplittingPhase(arr, 0, arr.length - 1);
+            updateStatus('merge', '✨ Now the magic begins! Time to put everything back together...');
+            await sleep(1000);
+            await mergeSortHelper(arr, 0, arr.length - 1);
+            
+            // Final celebration
+            updateStatus('merge', '🎊 Incredible! The toy box is perfectly organized! 🧸✨');
+            for (let i = 0; i < arr.length; i++) {
+                const bar = document.getElementById(`merge-bar-${i}`);
+                if (bar) {
+                    bar.classList.add('sorted');
+                    bar.classList.add('merging');
+                }
+                await sleep(120);
+            }
+            
+            setTimeout(() => {
+                clearHighlights('merge');
+            }, 2000);
+            
+            isAnimating = false;
+        }
+
+        async function showSplittingPhase(arr, left, right) {
+            const delay = getAnimationDelay('merge');
+            
+            if (left < right) {
+                const mid = Math.floor((left + right) / 2);
+                
+                // Show the current section being split
+                clearHighlights('merge');
+                highlightRange('merge', left, right, 'splitting');
+                updateStatus('merge', `📦 Splitting toys from position ${left} to ${right} into smaller piles...`);
+                
+                // Add split indicator
+                addSplitIndicator(left, right, `Splitting [${left}-${right}]`);
+                await sleep(delay);
+                
+                // Show the two parts after split
+                clearHighlights('merge');
+                highlightRange('merge', left, mid, 'comparing');
+                highlightRange('merge', mid + 1, right, 'current');
+                
+                updateStatus('merge', `✂️ Split into: Left pile [${left}-${mid}] and Right pile [${mid + 1}-${right}]`);
+                addSplitIndicator(left, mid, `Left [${left}-${mid}]`);
+                addSplitIndicator(mid + 1, right, `Right [${mid + 1}-${right}]`);
+                await sleep(delay * 0.9);
+                
+                // Recursively split left and right parts
+                await showSplittingPhase(arr, left, mid);
+                await showSplittingPhase(arr, mid + 1, right);
+            } else {
+                // Single element - highlight as base case
+                clearHighlights('merge');
+                highlightRange('merge', left, right, 'merging');
+                updateStatus('merge', `🎯 Found a single toy at position ${left}! This pile is ready!`);
+                addSplitIndicator(left, right, `Single [${left}]`);
+                await sleep(delay * 0.6);
+            }
+            
+            removeSplitIndicators();
+        }
+
+        async function mergeSortHelper(arr, left, right) {
+            if (left < right) {
+                const mid = Math.floor((left + right) / 2);
+                
+                await mergeSortHelper(arr, left, mid);
+                await mergeSortHelper(arr, mid + 1, right);
+                await merge(arr, left, mid, right);
+            }
+        }
+
+        function addSplitIndicator(start, end, text) {
+            removeSplitIndicators();
+            
+            for (let i = start; i <= end; i++) {
+                const bar = document.getElementById(`merge-bar-${i}`);
+                if (bar && i === Math.floor((start + end) / 2)) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'split-indicator';
+                    indicator.textContent = text;
+                    bar.style.position = 'relative';
+                    bar.appendChild(indicator);
+                }
+            }
+        }
+
+        function addMergeIndicator(start, end, text) {
+            for (let i = start; i <= end; i++) {
+                const bar = document.getElementById(`merge-bar-${i}`);
+                if (bar && i === Math.floor((start + end) / 2)) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'merge-indicator';
+                    indicator.textContent = text;
+                    bar.style.position = 'relative';
+                    bar.appendChild(indicator);
+                }
+            }
+        }
+
+        function removeSplitIndicators() {
+            const indicators = document.querySelectorAll('.split-indicator, .merge-indicator');
+            indicators.forEach(indicator => indicator.remove());
+        }
+
+        async function merge(arr, left, mid, right) {
+            const delay = getAnimationDelay('merge');
+            const leftArr = arr.slice(left, mid + 1);
+            const rightArr = arr.slice(mid + 1, right + 1);
+            
+            let i = 0, j = 0, k = left;
+            
+            // Show the sections being merged with indicators
+            clearHighlights('merge');
+            highlightRange('merge', left, mid, 'comparing');
+            highlightRange('merge', mid + 1, right, 'current');
+            updateStatus('merge', `🔄 Merging left pile [${left}-${mid}] with right pile [${mid+1}-${right}]...`);
+            addMergeIndicator(left, right, `Merging [${left}-${mid}] & [${mid+1}-${right}]`);
+            await sleep(delay);
+            
+            while (i < leftArr.length && j < rightArr.length) {
+                // Clear previous highlights
+                clearHighlights('merge');
+                
+                // Highlight the elements being compared
+                if (left + i < arr.length) highlightBars('merge', [left + i], 'comparing');
+                if (mid + 1 + j < arr.length) highlightBars('merge', [mid + 1 + j], 'current');
+                
+                updateStatus('merge', `🤔 Comparing ${leftArr[i]} vs ${rightArr[j]}... Which toy is smaller?`);
+                await sleep(delay * 0.8);
+                
+                if (leftArr[i] <= rightArr[j]) {
+                    arr[k] = leftArr[i];
+                    updateStatus('merge', `✅ ${leftArr[i]} ≤ ${rightArr[j]}, so ${leftArr[i]} goes first!`);
+                    // Highlight the chosen element
+                    highlightBars('merge', [left + i], 'merging');
+                    i++;
+                } else {
+                    arr[k] = rightArr[j];
+                    updateStatus('merge', `✅ ${rightArr[j]} < ${leftArr[i]}, so ${rightArr[j]} goes first!`);
+                    // Highlight the chosen element
+                    highlightBars('merge', [mid + 1 + j], 'merging');
+                    j++;
+                }
+                
+                arrays.merge = [...arr];
+                renderArray('merge');
+                
+                // Show the merged position
+                highlightBars('merge', [k], 'sorted');
+                await sleep(delay * 0.6);
+                k++;
+            }
+            
+            // Handle remaining elements from left array
+            while (i < leftArr.length) {
+                clearHighlights('merge');
+                arr[k] = leftArr[i];
+                arrays.merge = [...arr];
+                renderArray('merge');
+                updateStatus('merge', `📝 Adding remaining toy ${leftArr[i]} from left pile...`);
+                highlightBars('merge', [k], 'merging');
+                await sleep(delay * 0.5);
+                i++;
+                k++;
+            }
+            
+            // Handle remaining elements from right array
+            while (j < rightArr.length) {
+                clearHighlights('merge');
+                arr[k] = rightArr[j];
+                arrays.merge = [...arr];
+                renderArray('merge');
+                updateStatus('merge', `📝 Adding remaining toy ${rightArr[j]} from right pile...`);
+                highlightBars('merge', [k], 'merging');
+                await sleep(delay * 0.5);
+                j++;
+                k++;
+            }
+            
+            // Show the final merged section
+            clearHighlights('merge');
+            highlightRange('merge', left, right, 'sorted');
+            updateStatus('merge', `🎉 Successfully merged! Section [${left}-${right}] is now perfectly organized!`);
+            addMergeIndicator(left, right, `Merged [${left}-${right}] ✓`);
+            await sleep(delay * 0.9);
+            
+            removeSplitIndicators();
+            clearHighlights('merge');
+        }
+
+        // Helper functions
+        function highlightBars(type, indices, className) {
+            clearHighlights(type);
+            indices.forEach(index => {
+                const bar = document.getElementById(`${type}-bar-${index}`);
+                if (bar) bar.classList.add(className);
+            });
+        }
+
+        function highlightRange(type, start, end, className) {
+            for (let i = start; i <= end; i++) {
+                const bar = document.getElementById(`${type}-bar-${i}`);
+                if (bar) bar.classList.add(className);
+            }
+        }
+
+        function clearHighlights(type) {
+            const bars = document.querySelectorAll(`#${type}-array .array-bar`);
+            bars.forEach(bar => {
+                bar.classList.remove('comparing', 'swapping', 'pivot', 'current', 'splitting', 'merging');
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', initializeArrays);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c8610ec00d802f',t:'MTc1NDc1NDMxMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
